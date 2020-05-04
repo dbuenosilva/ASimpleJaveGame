@@ -20,7 +20,7 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
-    private ArrayList items;
+  //  private ArrayList items;
         
     /** Game() constructor
      * Create the game and initialise its internal map and itens
@@ -164,7 +164,7 @@ public class Game
     private void printHelp() 
     {
         System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the building.");
+        System.out.println("around at the university.");
         System.out.println();
 
         System.out.println("Your command words are:");
