@@ -17,11 +17,15 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 public class Room 
 {
+    final static int MAX_ITEM_PER_ROOM = 1;
+
     private String description; 
+    private ArrayList<Item> listOfItemsInTheRoom;
     private ArrayList<Item> listOfCompulsoryPersonalProtectiveEquipment;
     private HashMap<String, Room> exits;
 
@@ -34,7 +38,10 @@ public class Room
     public Room(String description) 
     {
         this.description = description;
-        //exits = new HashMap<String, Room>();
+        listOfItemsInTheRoom = new ArrayList<Item>();
+        listOfCompulsoryPersonalProtectiveEquipment = new ArrayList<Item>();
+        exits = new HashMap<String, Room>();
+
     }
 
     /** getDescription method
@@ -82,12 +89,13 @@ public class Room
     */
     private String getExitString() 
     {
-        String returnString = "Exits:"; 
+        String returnString = "Possible exits:"; 
         Set<String> keys = exits.keySet(); 
         
         for(String exit : keys) {
             returnString += " " + exit; 
         }
+        returnString += "\n\n";
         return returnString;  
     }
 
@@ -100,8 +108,59 @@ public class Room
     */    
     public String getLongDescription()
     {
-        return "You are " + description + ".\n" + getExitString();
+        return "\nYou are " + description + ".\n" + getExitString() + getItemsString();
     }
+
+    /** addItemInTheRoom method 
+    * To add a new item in this room
+    * @param newItem A item to be addd in the room
+    */
+    public void addItemInTheRoom(Item newItem)
+    {
+        if(listOfItemsInTheRoom.size() < MAX_ITEM_PER_ROOM ) {
+            this.listOfItemsInTheRoom.add(newItem);
+        }
+        else {
+            System.out.println("Error to try add the item " + newItem.getDescription() + " in the room,");
+            System.out.println("\nThe room " + this.getDescription() + " is full!" );
+        }
+    }
+
+    /** removeItemFromTheRoom method 
+    * Remove a item from the room.
+    * @param newItem A item to be removed from the room
+    * @return TRUE if the item was removed. FALSE if the item was not removed.
+    */    
+    public boolean removeItemFromTheRoom(Item newItem)
+    {
+        return(listOfItemsInTheRoom.remove(newItem));
+    }
+
+    /** getItemsString method
+    * Return a String listing the items in the room.,
+    * For example, if the room has items like mask and gloves, this method 
+    * should return a String containing: "mask gloves"
+    * @return A description of the available items. 
+    */
+    private String getItemsString() 
+    {
+        String returnString = ""; 
+       
+        Iterator<Item> items = listOfItemsInTheRoom.iterator();
+        while(items.hasNext()){   
+            Item currentItem = items.next();
+            returnString += "\n * " + currentItem.getName() + " - " + currentItem.getDescription();
+        }
+
+        if(returnString.isEmpty()) {
+            returnString = "There is not items available " + this.getDescription();
+        }
+        else {
+            returnString = "Items available " + this.getDescription() + returnString ; 
+        }
+
+        return returnString;  
+    }    
 
     /** addCompulsoryPersonalProtectiveEquipment method 
     * To add a new Compulsory PPE to be used when gettin in this room

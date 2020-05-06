@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+    import java.util.ArrayList;
 
 /**
  *  This class is the main class of the "Salving the World from COVID-19" application. 
@@ -20,13 +20,17 @@ public class Game
 {
     private final Parser parser;
     private Room currentRoom;
-    private ArrayList<Item> itemsCollected;
+    private ArrayList<Item> itemsCollectedByPlayer;
+    Item mask, safePassword, gloves, protectionGlasses, safeKey, 
+    handSanitiser, guineaPigs, covid19VaccineFormula, covid19Vaccine;
+
         
     /** Game constructor
      * Create the game and initialise its internal map and items.
      */
     public Game() 
     {
+        itemsCollectedByPlayer = new ArrayList<Item>();
         createItems();
         createRooms();
         parser = new Parser();
@@ -34,26 +38,25 @@ public class Game
 
     /** createItems method
      * Create all the items that the player perhaps take to save the World.
+     * This method does not have parametres and return.
      */
     private void createItems()
-    {
-        Item mask, safePassword, gloves, protectionGlasses, safeKey, 
-             handSanitiser, guineaPigs, covid19VaccineFormula, covid19Vaccine;
-        
+    {  
         // creating the items of the game
-        mask = new Item("Mask",TypeOfItem.PPE);
-        safePassword = new Item("Password of the safe",TypeOfItem.KEY);
-        gloves = new Item("Gloves",TypeOfItem.PPE);
-        protectionGlasses = new Item("Protection Glasses",TypeOfItem.PPE);
-        safeKey = new Item("Key of the safe",TypeOfItem.KEY);
-        handSanitiser = new Item("Hand sanitiser",TypeOfItem.ANTISEPTIC);
-        guineaPigs = new Item("Guinea Pig",TypeOfItem.HARMFUL);
-        covid19VaccineFormula = new Item("COVID-19 Vaccine Formula",TypeOfItem.FORMULA);
-        covid19Vaccine = new Item("COVID-19 Vaccine",TypeOfItem.VACCINE);
+        mask = new Item("Mask","an mask helps you breathe safely.",TypeOfItem.PPE);
+        safePassword = new Item("Password","The password is necessary to open the safe.",TypeOfItem.KEY);
+        gloves = new Item("Gloves","It is a good ideia to use when collecting things.",TypeOfItem.PPE);
+        protectionGlasses = new Item("Protection glasses","It will protect your eyes from COVID-19 virus.",TypeOfItem.PPE);
+        safeKey = new Item("Key","The key is necessary to open the safe.",TypeOfItem.KEY);
+        handSanitiser = new Item("Hand sanitiser","You must wash your hands often to avoid COVID-19 virus.",TypeOfItem.ANTISEPTIC);
+        guineaPigs = new Item("Guinea Pig","This kind animal may are infected by COVID-19 virus.",TypeOfItem.HARMFUL);
+        covid19VaccineFormula = new Item("Formula","The valuable COVID-19 Vaccine Formula",TypeOfItem.FORMULA);
+        covid19Vaccine = new Item("Vaccine","COVID-19 Vaccine to save the World!",TypeOfItem.VACCINE);
     }
 
     /** createRooms method
-     * Create all the rooms and link their exits together.
+     * Create all the rooms, link their exits together and assign to their its items
+     * This method does not have parametres and return.
      */
     private void createRooms()
     {
@@ -68,61 +71,71 @@ public class Game
         lavatory = new Room("in the Lavatory");
         iTroom = new Room("in the IT room");
         testingRoom = new Room("in the Testing room");
-        upstairsVaultRoom = new Room("in upstairs of the Vault room ");
+        upstairsVaultRoom = new Room("in upstairs of the Vault room");
         downstairsVaultRoom = new Room("in downstairs of the Vault room");
         upstairsLaboratory = new Room("in upstairs of the Laboratory");
         downstairsLaboratory = new Room("in downstairs of the Laboratory");
 
-        /*  initialising room exits  */
+        /****************  initialising room exits and its items  *******************/
 
         // setting Outside exists
         outside.setExit("north", reception);
 
-        // setting Reception exists
+        // setting Reception exists and adding a mask
         reception.setExit("south", outside);
         reception.setExit("east", iTroom);
         reception.setExit("north", ppeRoom);
+        reception.addItemInTheRoom(mask);        
 
-        // setting PPE room exists
+        // setting PPE room exists and adding gloves
         ppeRoom.setExit("south", reception);
         ppeRoom.setExit("east", managerRoom);
+        ppeRoom.addItemInTheRoom(gloves);
 
-        // setting Manager room exists        
+        // setting Manager room exists and adding key of the safe
         managerRoom.setExit("south", lavatory);
         managerRoom.setExit("west", ppeRoom);
+        managerRoom.addItemInTheRoom(safeKey);
 
-        // setting Lavatory room exists
+        // setting Lavatory room exists and adding hand sanitiser
         lavatory.setExit("south", iTroom);
         lavatory.setExit("north", managerRoom);
         lavatory.setExit("east", downstairsVaultRoom);
+        lavatory.addItemInTheRoom(handSanitiser);        
 
-        // setting IT room exists
+        // setting IT room exists and adding password of the safe
         iTroom.setExit("north", lavatory);
         iTroom.setExit("east", testingRoom);
         iTroom.setExit("west", reception);
+        iTroom.addItemInTheRoom(safePassword);        
 
-        // setting Testing room exists        
+        // setting Testing room exists and adding guinea pigs    
         testingRoom.setExit("west", iTroom);
         testingRoom.setExit("east", upstairsLaboratory);
+        testingRoom.addItemInTheRoom(guineaPigs);        
 
-        // setting upstairs Laboratory exists
+        // setting upstairs Laboratory exists and adding the vaccine
         upstairsLaboratory.setExit("west", testingRoom);
         upstairsLaboratory.setExit("down", downstairsLaboratory);
         upstairsLaboratory.setExit("north", downstairsVaultRoom);
+        upstairsLaboratory.addItemInTheRoom(covid19VaccineFormula);
         
-        // setting downstairs Laboratory exists        
+        // setting downstairs Laboratory exists       
         downstairsLaboratory.setExit("up", upstairsLaboratory);
+        // There is not item initially, only virus spread there
 
-        // setting downstairs Vault room exists
+        // setting downstairs Vault room exists and adding glasses
         downstairsVaultRoom.setExit("west", lavatory);
         downstairsVaultRoom.setExit("south", upstairsLaboratory);
         downstairsVaultRoom.setExit("up", upstairsVaultRoom);
+        downstairsVaultRoom.addItemInTheRoom(protectionGlasses);
 
-        // setting upstairs Vault room exists
+        // setting upstairs Vault room exists and adding vaccine
         upstairsVaultRoom.setExit("down", downstairsVaultRoom);
+        upstairsVaultRoom.addItemInTheRoom(covid19Vaccine);
 
         currentRoom = outside;  // starting the game outside of the building
-        currentRoom = currentRoom.getExit("outside");
+        // currentRoom = currentRoom.getExit("outside");
     }
 
     /** play method
@@ -140,7 +153,7 @@ public class Game
             final Command command = parser.getCommand();
             finished = processCommand(command);
         }
-        System.out.println("Thank you for playing.  Good bye.");
+        System.out.println("Thank you for playing. Be safety!");
     }
 
     /** printWelcome method
@@ -151,12 +164,12 @@ public class Game
         System.out.println();
         System.out.println("Welcome to the \"Salving the World from COVID-19\" game!");
         System.out.println("In order to save the world of the COVID-19 pandemic, the player needs to collect");
-        System.out.println("the vaccine for COVID-19 in the building which has high health risk of contamination.\n\n");
+        System.out.println("the vaccine for COVID-19 in the building which has high risk of contamination.\n");
         System.out.println("To access the Vault room, to open the safe and to pick up the vaccine, the player needs to get");
         System.out.println("a password in the IT room and a key in the Manager room. The player may pass for");
-        System.out.println("the Testing room and Laboratory. However, if he/she access the Testing room or the downstairs");
+        System.out.println("the Testing room and Laboratory. However, if he/she accesses the Testing room or the downstairs");
         System.out.println("Laboratory without wearing a mask, a glove and a protection glasses,");
-        System.out.println("he/she will die by COVID-19. In case the player does not access the Testing room and");
+        System.out.println("he/she will die from COVID-19. In case the player does not access the Testing room and");
         System.out.println("the downstairs Laboratory, he/she does not have to wear PPE. To win the game, the player"); 
         System.out.println("must collec the COVID-19 vaccine and a hand sanitizer to wash his/her hands before leaving"); 
         System.out.println("the building. If the player collects the COVID-19 vaccine and also the COVID-19 vaccine formula,");
@@ -164,8 +177,7 @@ public class Game
 
         System.out.println("Type 'help' if you need help.");
      
-        System.out.println(currentRoom.getLongDescription());
-     
+        System.out.println(currentRoom.getLongDescription());     
     }
 
     /**

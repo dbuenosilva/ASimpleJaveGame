@@ -14,32 +14,40 @@
  */
 public class Item
 {
-    private Room location; 
-    private TypeOfItem type;
+    private String name;
     private String description;
+    private TypeOfItem type;
 
     /** Item Constructor
-     * Constructor for objects of class Item which defines its descritipion.
+     * Constructor for objects of class Item which defines 
+     * its name and descritipion.
+     * @param name The name of the item.
+     * @param description The description of the item.
      */
-    public Item(String description)
+    public Item(String name, String description)
     {
+        this.name = name;
         this.description = description;
     }
 
    /** Item Constructor
-     * Constructor for objects of class Item which defines its descritipion
-     * and also if it is PPE or not.
+     * Constructor for objects of class Item which defines 
+     * its name, descritipion and also its type.
+     * @param name The name of the item.
+     * @param description The description of the item.
+     * @param type The description of the item. 
      */
-    public Item(String description, TypeOfItem type)
+    public Item(String name, String description, TypeOfItem type)
     {
+        this.name = name;
         this.description = description;
         this.type = type;
     }
 
     /** getDescription method 
     * Return a String description of the item,
-    * @return A description of the item. */
-
+    * @return A description of the item. 
+    */
     public String getDescription()  
     {
         return(this.description);
@@ -47,35 +55,35 @@ public class Item
 
     /** setDescription method 
     * To set a new description to the item
-    * @param description The description to be set.*/
-
+    * @param description The description to be set.
+    */
     public void setDescription(String description)  
     {
         this.description = description;
     }
     
-    /** getlocation method 
-    * Return a location  of the item
-    * @return A location of the item. */
+    /** getName method 
+    * Return the name  of the item
+    * @return The name of the item. */
 
-    public Room getlocation()  
+    public String getName()  
     {
-        return(this.location);
+        return(this.name);
     }
 
-    /** setlocation method 
-    * To define the locatie where to the item is.
-    * @param location The locate where the item is.*/
-
-    public void setlocation(Room location)  
+    /** setName method 
+    * To define the name of the item.
+    * @param name The name of the item
+    */
+    public void setName(String name)  
     {
-        this.location = location;
+        this.name = name;
     }
 
     /** getTypeOfItem method 
     * Return the type Of the Item
-    * @return type The type of the item */
-
+    * @return type The type of the item 
+    */
     public TypeOfItem getTypeOfItem()  
     {
         return(this.type);
@@ -83,8 +91,8 @@ public class Item
 
     /** setTypeOfItem method 
     * To set the type of the item
-    * @param setTypeOfItem Define the type of the item like PPE, VACCINE and so on */
-
+    * @param setTypeOfItem Define the type of the item like PPE, VACCINE and so on. 
+    */
     public void setTypeOfItem(TypeOfItem type)  
     {
         this.type = type;
