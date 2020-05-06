@@ -43,7 +43,7 @@ public class Game
     private void createItems()
     {  
         // creating the items of the game
-        mask = new Item("Mask","an mask helps you breathe safely.",TypeOfItem.PPE);
+        mask = new Item("Mask","A mask helps you breathe safely.",TypeOfItem.PPE);
         safePassword = new Item("Password","The password is necessary to open the safe.",TypeOfItem.KEY);
         gloves = new Item("Gloves","It is a good ideia to use when collecting things.",TypeOfItem.PPE);
         protectionGlasses = new Item("Protection glasses","It will protect your eyes from COVID-19 virus.",TypeOfItem.PPE);
@@ -180,7 +180,7 @@ public class Game
         System.out.println(currentRoom.getLongDescription());     
     }
 
-    /**
+    /** processCommand method
      * Given a command, process (that is: execute) the command.
      * @param command The command to be processed.
      * @return true If the command ends the game, false otherwise.
@@ -190,7 +190,7 @@ public class Game
         boolean wantToQuit = false;
 
         if(command.isUnknown()) {
-            System.out.println("I don't know what you mean...");
+            System.out.println("Invalid command  :( \n Try \"help\" to see a set of valid commands");
             return false;
         }
 
@@ -204,27 +204,25 @@ public class Game
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
+        else if (commandWord.equals("where")) {
+            where();
+        }
 
         return wantToQuit;
     }
 
     // implementations of user commands:
 
-    /**
+    /** printHelp method
      * Print out some help information.
      * Here we print some stupid, cryptic message and a list of the 
      * command words.
      */
     private void printHelp() 
     {
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
-        System.out.println();
-
-        System.out.println("Your command words are:");
-        //System.out.println("Your command words are:"); parser.showCommands();
-        System.out.println("   go quit help");
-
+        System.out.println("Are you at least wearing PPE?\n");
+        System.out.println("Pay attention to where you are going! You can die from COVID-19");
+        System.out.println(parser.showCommands());
     }
 
     /** goRoom method
@@ -268,4 +266,16 @@ public class Game
             return true;  // signal that we want to quit
         }
     }
+
+    /** where method
+     * Display where the play is and what items are in the room.
+     * After a sequence of commands the player may become lost,
+     * where command will help the player remember where he is.
+     */
+    private void where()
+    {
+        System.out.println(currentRoom.getLongDescription()); 
+    }
+
+
 }

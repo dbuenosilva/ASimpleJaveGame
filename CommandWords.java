@@ -39,12 +39,24 @@ public class CommandWords
         return false;
     }
 
-    /**
-* Print all valid commands to System.out. */
-//  public void showAll()
- // {
-        //for(String command : validCommands) { 
-            //System.out.print(command + " ");
-        //}
-        //System.out.println(); }
+    /** getCommandsString method
+    * Return a string with all valid commands in order to orient the player 
+    * @return A description of the available commands. 
+    */
+   public String getCommandsString()
+   {
+       String returnString = "";
+
+       for(String command : validCommands) { 
+            returnString += "> " + command + "\n";
+       }
+       if(returnString.isEmpty()) {
+           returnString = "There is not commands available";
+       }
+       else {
+           returnString = "The commands that you can use are: \n\n"  + returnString ; 
+       }
+
+       return returnString;   
+    }
 }

@@ -62,4 +62,13 @@ public class Parser
             return new Command(null, word2); 
         }
     }
+
+    /** showCommands method
+    * Return a string with all valid commands in order to orient the player 
+    * @return A description of the available commands. 
+    */
+    public String showCommands()
+    {
+        return(commands.getCommandsString());
+    }    
 }
