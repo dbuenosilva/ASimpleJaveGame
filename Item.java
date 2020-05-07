@@ -1,4 +1,3 @@
-
 /**
 * Class Item - a item in an "Saving the World from COVID-19" game.
  *
@@ -12,15 +11,22 @@
  * @author  Diego Bueno da Silva
  * @version 2020.05.04
  */
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class Item
 {
     private String name;
     private String description;
-    private TypeOfItem type;
+    private boolean itCanBeCarried;
+    private ArrayList<Item> listOfItemsInsideThis;
+    private ArrayList<Item> listOfItemsNeededtoOpenThis;    
 
     /** Item Constructor
      * Constructor for objects of class Item which defines 
      * its name and descritipion.
+     * By defaul, all item can be carried by the player
      * @param name The name of the item.
      * @param description The description of the item.
      */
@@ -28,20 +34,9 @@ public class Item
     {
         this.name = name;
         this.description = description;
-    }
-
-   /** Item Constructor
-     * Constructor for objects of class Item which defines 
-     * its name, descritipion and also its type.
-     * @param name The name of the item.
-     * @param description The description of the item.
-     * @param type The description of the item. 
-     */
-    public Item(String name, String description, TypeOfItem type)
-    {
-        this.name = name;
-        this.description = description;
-        this.type = type;
+        this.itCanBeCarried = true;
+        listOfItemsInsideThis = new ArrayList<Item>();
+        listOfItemsNeededtoOpenThis = new ArrayList<Item>();       
     }
 
     /** getDescription method 
@@ -80,21 +75,121 @@ public class Item
         this.name = name;
     }
 
-    /** getTypeOfItem method 
-    * Return the type Of the Item
-    * @return type The type of the item 
+    /** setitCanBeCarried method 
+    * To set a if the item can be carried by the player or not
+    * @param itCanBeCarried True if the item can be carried by the player, otherwise FALSE.
     */
-    public TypeOfItem getTypeOfItem()  
+    public void setItCanBeCarried(Boolean itCanBeCarried)  
     {
-        return(this.type);
+        this.itCanBeCarried = itCanBeCarried;
+    }
+    
+    /** itCanBeCarried method 
+    * Return if the item can be carried by the player or not
+    * @return True if the item can be carried by the player, otherwise FALSE. 
+    */
+    public boolean isCarried()  
+    {
+        return(this.itCanBeCarried);
+    }   
+    
+    /** addItemInsideAnother method 
+    * To add a new item inside of another item.
+    * @param newItem A item to be add inside of another item.
+    * @return TRUE if the item was added. FALSE if the item was not added.    
+    */
+    public boolean addItemInsideAnother(Item newItem)
+    {
+        return(this.listOfItemsInsideThis.add(newItem));            
     }
 
-    /** setTypeOfItem method 
-    * To set the type of the item
-    * @param setTypeOfItem Define the type of the item like PPE, VACCINE and so on. 
-    */
-    public void setTypeOfItem(TypeOfItem type)  
+    /** removeItemFromAnotherItem method 
+    * Remove a item from the another item.
+    * @param newItem A item to be removed from another item.
+    * @return TRUE if the item was removed. FALSE if the item was not removed.
+    */    
+    public boolean removeItemFromAnotherItem(Item newItem)
     {
-        this.type = type;
+        return(this.listOfItemsInsideThis.remove(newItem));
+    }
+
+    /** getItemsInsideAnotherItem method
+    * Return a list of items inside of another item.
+    * @return A list of the available items inside this item. 
+    */
+    public ArrayList<Item> getItemsInsideAnotherItem() 
+    {
+        return (this.listOfItemsInsideThis);  
+    }    
+
+    /** getItemsInsideString method
+    * Return a String listing the items inside another item.,
+    * For example, if the item has items like mask and vaccine, this method 
+    * should return a String containing: "vaccine"
+    * @return A description of the items inside another item. 
+    */
+    public String getItemsInsideString() 
+    {
+        String returnString = ""; 
+       
+        Iterator<Item> items = this.listOfItemsInsideThis.iterator();
+        while(items.hasNext()){   
+            Item currentItem = items.next();
+            returnString += "\n * " + currentItem.getName() + " - " + currentItem.getDescription();
+        }
+
+        if(returnString.isEmpty()) {
+            returnString = "There is not items inside of " + this.getDescription();
+        }
+        else {
+            returnString = "Items inside of " + this.getDescription() + returnString ; 
+        }
+
+        return returnString;  
+    }      
+
+    /** getItemNeededToOpenThis method
+    * Return the item that is needed to open this item
+    * if the name searched does not exist, will return null
+    * @return The list of needed item to open the item.
+    */
+    public ArrayList<Item> getItemNeededToOpenThis() 
+    {
+        return (this.listOfItemsInsideThis);  
+    } 
+
+    /** addItemNeededToOpenThis method
+    * Adding a necessary item to open this.
+    * @param item The needed item. 
+    */
+    public void addItemNeededToOpenThis(Item item)
+    {
+        listOfItemsNeededtoOpenThis.add(item); 
+    }
+    
+    /** getNeededItemsString method
+    * Return a String listing the needed items to open this,
+    * For example, if the item is a safe that need items like key and password, this method 
+    * should return a String containing: "key password"
+    * @return A description of the needed items to open another item. 
+    */
+    public String getNeededItemsString() 
+    {
+        String returnString = ""; 
+       
+        Iterator<Item> items = this.listOfItemsNeededtoOpenThis.iterator();
+        while(items.hasNext()){   
+            Item currentItem = items.next();
+            returnString += "\n * " + currentItem.getName() + " - " + currentItem.getDescription();
+        }
+
+        if(returnString.isEmpty()) {
+            returnString = "It is not necessary item to open " + this.getDescription();
+        }
+        else {
+            returnString = "Items necessary to open " + this.getDescription() + returnString ; 
+        }
+
+        return returnString;    
     }
 }

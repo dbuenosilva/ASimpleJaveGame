@@ -176,7 +176,7 @@ public class Room
     */
     public void addCompulsoryPersonalProtectiveEquipment(Item newItem)
     {
-        if(newItem.getTypeOfItem().equals(TypeOfItem.PPE)) {
+        if(newItem.isCarried()) {
             this.listOfCompulsoryPersonalProtectiveEquipment.add(newItem);
         }
         else {
@@ -190,5 +190,24 @@ public class Room
     {
         return(listOfCompulsoryPersonalProtectiveEquipment);
     }
+
+    /** evaluateItemInTheRoom method
+    * Evaluate if the item is in the room.
+    * @param nameOfitemToCheck A String name of item to be checked if it is in the room
+    * @return The object Item if its is in the room. Null if the item is not in the room.
+    */    
+    public Item evaluateItemInTheRoom(String nameOfitemToCheck)
+    {
+        Iterator<Item> items = this.getItemsInTheRoom().iterator();
+        while(items.hasNext()){   
+            Item currentItem = items.next();
+            if(currentItem.getName().equals(nameOfitemToCheck)) {
+                return (currentItem);
+            }
+        }
+        return (null);
+    }
+
+
 
 }

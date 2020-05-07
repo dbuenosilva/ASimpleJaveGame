@@ -23,7 +23,7 @@ public class Game
     private Room currentRoom;
     private Player player01;
     private Item mask, safePassword, gloves, protectionGlasses, safeKey, 
-    handSanitiser, guineaPigs, covid19VaccineFormula, covid19Vaccine;
+    handSanitiser, guineaPigs, covid19VaccineFormula, covid19Vaccine, safe;
 
         
     /** Game constructor
@@ -35,7 +35,7 @@ public class Game
         createItems();
         createRooms();
         parser = new Parser();
-        player01 = new Player(JOptionPane.showInputDialog("Please enter the name of the player"));
+        player01 = new Player(JOptionPane.showInputDialog("Please enter the name of the player 01"));
     }
 
     /** createItems method
@@ -45,15 +45,24 @@ public class Game
     private void createItems()
     {  
         // creating the items of the game
-        mask = new Item("mask","A mask helps you breathe safely.",TypeOfItem.PPE);
-        safePassword = new Item("password","The password is necessary to open the safe.",TypeOfItem.KEY);
-        gloves = new Item("gloves","It is a good ideia to use when collecting things.",TypeOfItem.PPE);
-        protectionGlasses = new Item("protection-glasses","It will protect your eyes from COVID-19 virus.",TypeOfItem.PPE);
-        safeKey = new Item("key","The key is necessary to open the safe.",TypeOfItem.KEY);
-        handSanitiser = new Item("hand-sanitiser","You must wash your hands often to avoid COVID-19 virus.",TypeOfItem.ANTISEPTIC);
-        guineaPigs = new Item("guinea-pig","This kind animal may are infected by COVID-19 virus.",TypeOfItem.HARMFUL);
-        covid19VaccineFormula = new Item("formula","The valuable COVID-19 Vaccine Formula",TypeOfItem.FORMULA);
-        covid19Vaccine = new Item("vaccine","COVID-19 Vaccine to save the World!",TypeOfItem.VACCINE);
+        mask = new Item("mask","A mask helps you breathe safely.");
+        safePassword = new Item("password","The password is necessary to open the safe.");
+        gloves = new Item("gloves","It is a good ideia to use when collecting things.");
+        protectionGlasses = new Item("protection-glasses","It will protect your eyes from COVID-19 virus.");
+        safeKey = new Item("key","The key is necessary to open the safe.");
+        handSanitiser = new Item("hand-sanitiser","You must wash your hands often to avoid COVID-19 virus.");
+        guineaPigs = new Item("guinea-pig","This kind animal may are infected by COVID-19 virus.");
+        covid19VaccineFormula = new Item("formula","The valuable COVID-19 Vaccine Formula");
+        covid19Vaccine = new Item("vaccine","COVID-19 Vaccine to save the World!");
+        safe = new Item("safe","Inside the safe contains the COVID-19 Vaccine that can save the World!");
+        
+        // Only the item Safe can not be carried by the player ( it is too heavy! )
+        safe.setItCanBeCarried(false); 
+
+        //Defining the required items to open the safe
+        safe.addItemNeededToOpenThis(safePassword);
+        safe.addItemNeededToOpenThis(safeKey);
+
     }
 
     /** createRooms method
@@ -134,7 +143,10 @@ public class Game
 
         // setting upstairs Vault room exists and adding vaccine
         upstairsVaultRoom.setExit("down", downstairsVaultRoom);
-        upstairsVaultRoom.addItemInTheRoom(covid19Vaccine);
+        upstairsVaultRoom.addItemInTheRoom(safe);
+
+        // Putting the vaccine inside the safe
+        safe.addItemInsideAnother(covid19Vaccine);
 
         currentRoom = outside;  // starting the game outside of the building
     }
@@ -217,6 +229,9 @@ public class Game
         else if (commandWord.equals("inventory")) {
             inventory();
         }  
+        else if (commandWord.equals("open")) {
+            open(command);
+        }  
 
         return wantToQuit;
     }
@@ -254,7 +269,7 @@ public class Game
 
         if (nextRoom == null) {
             System.out.println("Sorry " + player01.getName());
-            System.out.println("There is no door in the direction " + direction + currentRoom.getDescription());
+            System.out.println("There is no door in the direction " + direction + " " +  currentRoom.getDescription());
         }
         else {
             currentRoom = nextRoom;
@@ -320,7 +335,9 @@ public class Game
                         return; // stop the loop, item found and added successful!  
                     }
                     else {// somethis went wrong to add the item to player
-                        System.out.print("Error to try to take the item " + itemToBeCollected.getName() + " from the room.");                    
+                        System.out.println("Error to try to take the item " + itemToBeCollected.getName() + " from the room.");    
+                        System.out.println("Check if the item " + itemToBeCollected.getName() + " can be carried.");                                          
+                        currentRoom.addItemInTheRoom(itemToBeCollected); // Roolback previous operation due some error                        
                         return;// stop the loop, item found but there is some inconsistent 
                     }
                 }
@@ -360,7 +377,7 @@ public class Game
                 // transfering the item from the player to the room
                 if(currentRoom.addItemInTheRoom(itemToBeDropped)) { // if the room accepts this item
                     if(player01.removeItemFromThePlayer(itemToBeDropped)) {  // and if player can drop the item
-                        System.out.print("Item " + itemToBeDropped.getName() + " dropped in the room " );
+                        System.out.print("Item " + itemToBeDropped.getName() + " dropped " );
                         System.out.println(currentRoom.getDescription());
                         return;  // stop the loop, item found and dropped!                               
                     }
@@ -383,6 +400,70 @@ public class Game
         System.out.println("Try \"inventory\" command and check what items do you have with you.");
     }   
 
+    /** open method
+     * Open a item available in the room.
+     * The player can open an item in the room in case
+     * the item has some objects inside its.
+     */
+    private void open(final Command command) 
+    {
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know where to go...
+            System.out.println("Open what?");
+            return;
+        }
+
+        final String nameOfItemToOpen = command.getSecondWord();
+        Item itemToBeOpenned = currentRoom.evaluateItemInTheRoom(nameOfItemToOpen);
+
+        if( itemToBeOpenned != null) {
+
+            Iterator<Item> items = itemToBeOpenned.getItemNeededToOpenThis().iterator();
+            while(items.hasNext()){   
+                Item currentItem = items.next();
+
+                // If the player do not have the currentItem
+                if ( ! player01.evaluateItemWithThePlayer(currentItem.getDescription()).equals(currentItem)) {
+
+                    System.out.println("Sorry " + player01.getName() + ", you do not have the item " + currentItem.getName() + " :(");
+                    System.out.println("The necessary items to open " + itemToBeOpenned.getDescription() + " are:");
+                    System.out.println(itemToBeOpenned.getNeededItemsString());
+                    return;
+                }
+            }
+
+            // If the program reaches this point, the player has all the necessary items.
+            Iterator<Item> itemsAcquired = itemToBeOpenned.getItemsInsideAnotherItem().iterator();
+            
+            if ( ! itemsAcquired.hasNext() ) { // Item is empty
+                System.out.println("There is nothing inside of " + itemToBeOpenned.getName() + " :("); 
+            }
+            else {
+                while(itemsAcquired.hasNext()) {
+                    Item itemCaught = itemsAcquired.next();
+                    
+                    if(player01.addItemToThePlayer(itemCaught)) {
+
+                        if (itemToBeOpenned.removeItemFromAnotherItem(itemCaught)) {
+                            System.out.println("Congrats " + player01.getName() + "!");                        
+                            System.out.println("Item " + itemCaught.getName() + " collected."); 
+                        } 
+                        else {
+                            System.out.println("Sorry " + player01.getName() + ", the item " + itemCaught.getName() + " could not be removed from " + itemToBeOpenned.getDescription() + " :(");
+                        }
+                    }
+                    else {
+                        System.out.println("Sorry " + player01.getName() + ", the item " + itemCaught.getName() + " could not be collect :(");
+                        System.out.println("Check if the item " + itemToBeOpenned.getDescription() + " can be carried ");                  
+                    }
+                }
+            }
+        }      
+        else {
+            System.out.println("Sorry " + player01.getName() + ", there is not item \"" + nameOfItemToOpen + "\" " + currentRoom.getDescription() + " :(");
+        }        
+    }   
+
     /** inventory method
      * Print out all items owned by the player.
      */
@@ -391,10 +472,8 @@ public class Game
         System.out.println(player01.getStringItemsWithThePlayer());     
     }
 
-
 //    System.out.println("Error to try add PPE to the List of Compulsory PPE:");
 //    System.out.println("\nThe item " + newItem.getDescription() + " is not PPE!" );
-
 
     /*************** end of implementations of user commands **************/    
 }

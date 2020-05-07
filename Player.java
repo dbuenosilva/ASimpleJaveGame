@@ -55,7 +55,12 @@ public class Player
     */
     public boolean addItemToThePlayer(Item newItem)
     {
-        return(this.itemsBelongedToPlayer.add(newItem));            
+        if(newItem.isCarried()) {
+            return(this.itemsBelongedToPlayer.add(newItem));            
+        }
+        else {
+            return(false);
+        }
     }
 
     /** removeItemFromThePlayer method 
@@ -101,5 +106,22 @@ public class Player
         }
 
         return returnString;  
+    }    
+
+    /** evaluateItemWithThePlayer method
+    * Evaluate if the item belongs to the player
+    * @param nameOfItemToCheck A String name of item to be checked if it belongs to the player.
+    * @return The object Item if it belongs to the player. Null if the item does not belong to the player..
+    */    
+    public Item evaluateItemWithThePlayer(String nameOfItemToCheck)
+    {
+        Iterator<Item> items = getItemsWithThePlayer().iterator();
+        while(items.hasNext()){   
+            Item currentItem = items.next();
+            if(currentItem.getDescription().equals(nameOfItemToCheck)) {
+                return (currentItem);
+            }
+        }
+        return (null);
     }    
 }
