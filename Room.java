@@ -1,4 +1,3 @@
-
 /**
  * Class Room - a room in the building of "Salving the World from COVID-19" game.
  *
@@ -114,15 +113,15 @@ public class Room
     /** addItemInTheRoom method 
     * To add a new item in this room
     * @param newItem A item to be addd in the room
+    * @return TRUE if the item was added. FALSE if the item was not added.    
     */
-    public void addItemInTheRoom(Item newItem)
+    public boolean addItemInTheRoom(Item newItem)
     {
         if(listOfItemsInTheRoom.size() < MAX_ITEM_PER_ROOM ) {
-            this.listOfItemsInTheRoom.add(newItem);
+            return(this.listOfItemsInTheRoom.add(newItem));            
         }
         else {
-            System.out.println("Error to try add the item " + newItem.getDescription() + " in the room,");
-            System.out.println("\nThe room " + this.getDescription() + " is full!" );
+            return(false);
         }
     }
 
@@ -136,13 +135,22 @@ public class Room
         return(listOfItemsInTheRoom.remove(newItem));
     }
 
+    /** getItemsInTheRoom method
+    * Return a list of items in the room.
+    * @return A list of the available items in the room. 
+    */
+    public ArrayList<Item> getItemsInTheRoom() 
+    {
+        return (this.listOfItemsInTheRoom);  
+    }    
+
     /** getItemsString method
     * Return a String listing the items in the room.,
     * For example, if the room has items like mask and gloves, this method 
     * should return a String containing: "mask gloves"
     * @return A description of the available items. 
     */
-    private String getItemsString() 
+    public String getItemsString() 
     {
         String returnString = ""; 
        
@@ -172,8 +180,6 @@ public class Room
             this.listOfCompulsoryPersonalProtectiveEquipment.add(newItem);
         }
         else {
-            System.out.println("Error to try add PPE to the List of Compulsory PPE:");
-            System.out.println("\nThe item " + newItem.getDescription() + " is not PPE!" );
         }
     }
 

@@ -6,7 +6,8 @@
  * It is used to recognise commands as they are typed in.
  *
  * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Diego Bueno da Silva
+ * @version 2020.05.04
  */
 
 public class CommandWords
@@ -16,7 +17,7 @@ public class CommandWords
         "drop","go","help","inventory","open","quit","take","where"
     };
 
-    /**
+    /** CommandWords constructor
      * Constructor - initialise the command words.
      */
     public CommandWords()
@@ -24,7 +25,7 @@ public class CommandWords
         // nothing to do at the moment...
     }
 
-    /**
+    /** isCommand method
      * Check whether a given String is a valid command word. 
      * @return true if a given string is a valid command,
      * false if it isn't.
@@ -36,7 +37,7 @@ public class CommandWords
                 return true;
         }
         // if we get here, the string was not found in the commands
-        return false;
+        return (false);
     }
 
     /** getCommandsString method

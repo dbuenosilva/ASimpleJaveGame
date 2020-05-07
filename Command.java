@@ -14,7 +14,8 @@
  * If the command had only one word, then the second word is <null>.
  * 
  * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Diego Bueno da Silva
+ * @version 2020.05.04
  */
 
 public class Command
@@ -22,7 +23,7 @@ public class Command
     private String commandWord;
     private String secondWord;
 
-    /**
+    /** Command constructor
      * Create a command object. First and second word must be supplied, but
      * either one (or both) can be null.
      * @param firstWord The first word of the command. Null if the command
@@ -31,43 +32,43 @@ public class Command
      */
     public Command(String firstWord, String secondWord)
     {
-        commandWord = firstWord;
+        this.commandWord = firstWord;
         this.secondWord = secondWord;
     }
 
-    /**
+    /** getCommandWord method
      * Return the command word (the first word) of this command. If the
      * command was not understood, the result is null.
      * @return The command word.
      */
     public String getCommandWord()
     {
-        return commandWord;
+        return (this.commandWord);
     }
 
-    /**
+    /** getSecondWord method
      * @return The second word of this command. Returns null if there was no
      * second word.
      */
     public String getSecondWord()
     {
-        return secondWord;
+        return (this.secondWord);
     }
 
-    /**
+    /** isUnknown method
      * @return true if this command was not understood.
      */
     public boolean isUnknown()
     {
-        return (commandWord == null);
+        return (this.commandWord == null);
     }
 
-    /**
+    /** hasSecondWord method
      * @return true if the command has a second word.
      */
     public boolean hasSecondWord()
     {
-        return (secondWord != null);
+        return (this.secondWord != null);
     }
 }
 

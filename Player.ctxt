@@ -1,0 +1,24 @@
+#BlueJ class context
+comment0.target=Player
+comment1.params=name
+comment1.target=Player(java.lang.String)
+comment1.text=\n\ Constructor\ for\ objects\ of\ class\ Player\n\ Initialise\ with\ a\ name\ and\ a\ empty\ list\ of\ items\n
+comment2.params=
+comment2.target=java.lang.String\ getName()
+comment2.text=\ getName\ method\n\ Returns\ a\ String\ containing\ the\ name\ of\ the\ player\n\ @return\ The\ name\ of\ the\ player.\n
+comment3.params=name
+comment3.target=void\ setName(java.lang.String)
+comment3.text=\ setName\ method\n\ Setting\ a\ new\ name\ to\ the\ player\n\ @param\ name\ The\ name\ of\ the\ player.\n
+comment4.params=newItem
+comment4.target=boolean\ addItemToThePlayer(Item)
+comment4.text=\ addItemToThePlayer\ method\ \n\ To\ add\ a\ new\ item\ to\ belong\ to\ the\ player\n\ @param\ newItem\ A\ item\ to\ be\ acquired\ by\ the\ player\n\ @return\ TRUE\ if\ the\ item\ was\ acquired.\ FALSE\ if\ the\ item\ was\ not\ acquired.\ \ \ \ \n
+comment5.params=newItem
+comment5.target=boolean\ removeItemFromThePlayer(Item)
+comment5.text=\ removeItemFromThePlayer\ method\ \n\ Remove\ a\ item\ from\ the\ player.\n\ @param\ newItem\ A\ item\ to\ be\ removed\ from\ the\ player\n\ @return\ TRUE\ if\ the\ item\ was\ removed.\ FALSE\ if\ the\ item\ was\ not\ removed.\n
+comment6.params=
+comment6.target=java.util.ArrayList\ getItemsWithThePlayer()
+comment6.text=\ getItemsWithThePlayer\ method\n\ Return\ a\ list\ of\ items\ with\ the\ player.\n\ @return\ A\ list\ of\ the\ available\ items\ with\ the\ player.\ \n
+comment7.params=
+comment7.target=java.lang.String\ getStringItemsWithThePlayer()
+comment7.text=\ getStringItemsWithThePlayer\ method\n\ Return\ a\ String\ listing\ the\ items\ with\ the\ player,\n\ For\ example,\ if\ the\ player\ has\ items\ like\ mask\ and\ gloves,\ this\ method\ \n\ should\ return\ a\ String\ containing\:\ "mask\ gloves"\n\ @return\ A\ description\ of\ the\ items\ belonging\ to\ the\ player.\n
+numComments=8

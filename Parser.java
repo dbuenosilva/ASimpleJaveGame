@@ -14,14 +14,15 @@ import java.util.Scanner;
  * returns a command object that is marked as an unknown command.
  * 
  * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Diego Bueno da Silva
+ * @version 2020.05.04
  */
 public class Parser 
 {
     private CommandWords commands;  // holds all valid command words
     private Scanner reader;         // source of command input
 
-    /**
+    /** Parser constructor
      * Create a parser to read from the terminal window.
      */
     public Parser() 
@@ -30,7 +31,7 @@ public class Parser
         reader = new Scanner(System.in);
     }
 
-    /**
+    /** getCommand method
      * @return The next command from the user.
      */
     public Command getCommand() 
