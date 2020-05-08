@@ -102,7 +102,7 @@ public class Player
             returnString = "Sorry " + this.getName() + ", there is not items with you :(";
         }
         else {
-            returnString = "Good job " + this.getName() + "!\n Items collected by you \n"+ returnString ; 
+            returnString = "Good job " + this.getName() + "!\n Items collected by you: "+ returnString ; 
         }
 
         return returnString;  
@@ -118,10 +118,29 @@ public class Player
         Iterator<Item> items = getItemsWithThePlayer().iterator();
         while(items.hasNext()){   
             Item currentItem = items.next();
-            if(currentItem.getDescription().equals(nameOfItemToCheck)) {
+            if(currentItem.getName().equals(nameOfItemToCheck)) {
                 return (currentItem);
             }
         }
         return (null);
     }    
+
+    /** getItemWithThePlayer method
+    * Return the Object of type Item in case player has it.
+    * @param nameOfitemToCheck A String name of item to be checked if the player has it.
+    * @return The object Item if the player has it. Null if the player does not have it.
+    */    
+    public Item getItemWithThePlayer(String nameOfitemToCheck)
+    {
+        Iterator<Item> items = this.getItemsWithThePlayer().iterator();
+        while(items.hasNext()){   
+            Item currentItem = items.next();
+            if(currentItem.getName().equals(nameOfitemToCheck)) {
+                return (currentItem);
+            }
+        }
+        return (null);
+    }
+
+
 }

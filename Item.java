@@ -155,7 +155,7 @@ public class Item
     */
     public ArrayList<Item> getItemNeededToOpenThis() 
     {
-        return (this.listOfItemsInsideThis);  
+        return (this.listOfItemsNeededtoOpenThis);  
     } 
 
     /** addItemNeededToOpenThis method
@@ -185,9 +185,6 @@ public class Item
 
         if(returnString.isEmpty()) {
             returnString = "It is not necessary item to open " + this.getDescription();
-        }
-        else {
-            returnString = "Items necessary to open " + this.getDescription() + returnString ; 
         }
 
         return returnString;    

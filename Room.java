@@ -21,12 +21,13 @@ import java.util.Set;
 
 public class Room 
 {
-    final static int MAX_ITEM_PER_ROOM = 1;
+    final static int MAX_ITEM_PER_ROOM = 3;
 
     private String description; 
     private ArrayList<Item> listOfItemsInTheRoom;
-    private ArrayList<Item> listOfCompulsoryPersonalProtectiveEquipment;
+    private ArrayList<Item> listOfCompulsoryItemsWithThePlayer;
     private HashMap<String, Room> exits;
+    private boolean inside;
 
     /** Room constructor
      * Create a room described "description". Initially, it has
@@ -34,13 +35,13 @@ public class Room
      * "Outside of the building".
      * @param description The room's description.
      */
-    public Room(String description) 
+    public Room(String description, boolean inside) 
     {
         this.description = description;
         listOfItemsInTheRoom = new ArrayList<Item>();
-        listOfCompulsoryPersonalProtectiveEquipment = new ArrayList<Item>();
+        listOfCompulsoryItemsWithThePlayer = new ArrayList<Item>();
         exits = new HashMap<String, Room>();
-
+        this.inside = inside;
     }
 
     /** getDescription method
@@ -88,13 +89,13 @@ public class Room
     */
     private String getExitString() 
     {
-        String returnString = "Possible exits:"; 
+        String returnString = "\nPossible exits:"; 
         Set<String> keys = exits.keySet(); 
         
         for(String exit : keys) {
             returnString += " " + exit; 
         }
-        returnString += "\n\n";
+        returnString += "\n";
         return returnString;  
     }
 
@@ -107,7 +108,7 @@ public class Room
     */    
     public String getLongDescription()
     {
-        return "\nYou are " + description + ".\n" + getExitString() + getItemsString();
+        return "You are " + description + ". " + getExitString() + getItemsString();
     }
 
     /** addItemInTheRoom method 
@@ -170,26 +171,71 @@ public class Room
         return returnString;  
     }    
 
-    /** addCompulsoryPersonalProtectiveEquipment method 
+    /** addCompulsoryItemsWithThePlayer method 
     * To add a new Compulsory PPE to be used when gettin in this room
     * @param description A compulsory Personal Protective Equipment to be used when gettin in this room
     */
-    public void addCompulsoryPersonalProtectiveEquipment(Item newItem)
+    public void addCompulsoryItemsWithThePlayer(Item newItem)
     {
         if(newItem.isCarried()) {
-            this.listOfCompulsoryPersonalProtectiveEquipment.add(newItem);
+            this.listOfCompulsoryItemsWithThePlayer.add(newItem);
         }
         else {
         }
     }
 
-    /** getCompulsoryPersonalProtectiveEquipment method 
+    /** getListOfCompulsoryItemsWithThePlayer method 
     * Return a list of Compulsory Personal Protective Equipment to access the room.
     * @return A list of Compulsory Personal Protective Equipment necessary to access this room safely. */
-    public ArrayList<Item> getCompulsoryPersonalProtectiveEquipment()
+    public ArrayList<Item> getListOfCompulsoryItemsWithThePlayer()
     {
-        return(listOfCompulsoryPersonalProtectiveEquipment);
+        return(listOfCompulsoryItemsWithThePlayer);
     }
+    
+    /* getStringOfCompulsoryItemsWithThePlayer method
+    * Return a String listing the items compusory the get in the room.
+    * For example, if the room obligates the play to take mask 
+    * and gloves, this method should return a String containing: 
+    * "mask" "gloves"
+    * @return A description of the items inside another item. 
+    */
+    public String getStringOfCompulsoryItemsWithThePlayer() 
+    {
+        String returnString = ""; 
+       
+        Iterator<Item> items = this.getListOfCompulsoryItemsWithThePlayer().iterator();
+        while(items.hasNext()){   
+            Item currentItem = items.next();
+            returnString += " * " + currentItem.getName() + " - " + currentItem.getDescription() + "\n";
+        }
+
+        if(returnString.isEmpty()) {
+            returnString = "There is not items compulsory for " + this.getDescription();
+        }
+
+        return returnString;  
+    }      
+
+    /* evaluateIfPlayerCanGetInTheRoom method
+    * Return a TRUE if the player can get in the room.
+    * For example, if the room obligates the play to take mask 
+    * and gloves, this method checks if the player has taken mask 
+    * and gloves before getting the room.
+    * @return True if the player can access the room, false otherwise. 
+    */
+    public boolean evaluateIfPlayerCanGetInTheRoom(Player player) 
+    {
+       
+        Iterator<Item> items = this.getListOfCompulsoryItemsWithThePlayer().iterator();
+        while(items.hasNext()){   
+            
+            // checking if the player has each compulsory item
+            if ( player.evaluateItemWithThePlayer(items.next().getName()) == null ) {
+                return( false );
+            }
+        }
+        return true;  
+    }     
 
     /** evaluateItemInTheRoom method
     * Evaluate if the item is in the room.
@@ -208,6 +254,21 @@ public class Room
         return (null);
     }
 
+    /** isInsideOfTheBuilding method
+     * @return True if the room is inside of the building.
+     */
+    public boolean isInsideOfTheBuilding()
+    {
+        return this.inside;
+    }
 
+    /** setInside method
+     * Setting if the room is inside of the building or not.
+     * @param description True if the room is inside, otherwise false.
+     */
+    public void setInside(boolean inside)
+    {
+         this.inside = inside;
+    }
 
 }
