@@ -20,55 +20,54 @@
 
 public class Command
 {
-    private String commandWord;
+    private CommandWord commandWord;
     private String secondWord;
 
-    /** Command constructor
-     * Create a command object. First and second word must be supplied, but
-     * either one (or both) can be null.
-     * @param firstWord The first word of the command. Null if the command
+    /**
+     * Create a command object. First and second words must be supplied, but
+     * the second may be null.
+     * @param commandWord The CommandWord. UNKNOWN if the command word
      *                  was not recognised.
-     * @param secondWord The second word of the command.
+     * @param secondWord The second word of the command. May be null.
      */
-    public Command(String firstWord, String secondWord)
+    public Command(CommandWord commandWord, String secondWord)
     {
-        this.commandWord = firstWord;
+        this.commandWord = commandWord;
         this.secondWord = secondWord;
     }
 
-    /** getCommandWord method
-     * Return the command word (the first word) of this command. If the
-     * command was not understood, the result is null.
+    /**
+     * Return the command word (the first word) of this command.
      * @return The command word.
      */
-    public String getCommandWord()
+    public CommandWord getCommandWord()
     {
-        return (this.commandWord);
+        return commandWord;
     }
 
-    /** getSecondWord method
+    /**
      * @return The second word of this command. Returns null if there was no
      * second word.
      */
     public String getSecondWord()
     {
-        return (this.secondWord);
+        return secondWord;
     }
 
-    /** isUnknown method
+    /**
      * @return true if this command was not understood.
      */
     public boolean isUnknown()
     {
-        return (this.commandWord == null);
+        return (commandWord == CommandWord.UNKNOWN);
     }
 
-    /** hasSecondWord method
+    /**
      * @return true if the command has a second word.
      */
     public boolean hasSecondWord()
     {
-        return (this.secondWord != null);
+        return (secondWord != null);
     }
 }
 

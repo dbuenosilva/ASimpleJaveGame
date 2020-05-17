@@ -29,8 +29,8 @@ public class Room
     private HashMap<String, Room> exits;
     private boolean inside;
 
-    /** Room constructor
-     * Create a room described "description". Initially, it has
+    /** 
+     * Constructor creates a room described "description". Initially, it has
      * no exits. "description" is something like "the Reception" or
      * "Outside of the building".
      * @param description The room's description.
@@ -44,7 +44,7 @@ public class Room
         this.inside = inside;
     }
 
-    /** getDescription method
+    /** 
      * @return The description of the room.
      */
     public String getDescription()
@@ -52,7 +52,7 @@ public class Room
         return description;
     }
 
-    /** setDescription method
+    /** 
      * Setting a new descrition to the room
      * @param description The new room's description.
      */
@@ -61,7 +61,7 @@ public class Room
          this.description = description;
     }
 
-    /** getExit method
+    /** 
     * Return the room that is reached if we go from this 
     * room in direction "direction " 
     * If there is no room in that direction, return null.
@@ -71,7 +71,7 @@ public class Room
         return exits.get(direction); 
     }
 
-    /** setExit method
+    /** 
     * Setting a possible exit to this room.
     * @param direction The direction of the exit.
     * @param neighbor The room in the given direction. 
@@ -81,7 +81,7 @@ public class Room
         exits.put(direction, neighbor); 
     }
     
-    /** getExitString method
+    /** 
     * Return a String listing the exits from the room.,
     * For example, if the room has exits to the north and west, this method 
     * should return a String containing: "north west"
@@ -99,7 +99,7 @@ public class Room
         return returnString;  
     }
 
-    /** getLongDescription method
+    /** 
     * Returns a String containing the description of the current room 
     * and a list of the exits of a room, of the form:
     *       You are in the kitchen.
@@ -111,7 +111,7 @@ public class Room
         return "You are " + description + ". " + getExitString() + getItemsString();
     }
 
-    /** addItemInTheRoom method 
+    /** 
     * To add a new item in this room
     * @param newItem A item to be addd in the room
     * @return TRUE if the item was added. FALSE if the item was not added.    
@@ -126,7 +126,7 @@ public class Room
         }
     }
 
-    /** removeItemFromTheRoom method 
+    /** 
     * Remove a item from the room.
     * @param newItem A item to be removed from the room
     * @return TRUE if the item was removed. FALSE if the item was not removed.
@@ -136,7 +136,7 @@ public class Room
         return(listOfItemsInTheRoom.remove(newItem));
     }
 
-    /** getItemsInTheRoom method
+    /** 
     * Return a list of items in the room.
     * @return A list of the available items in the room. 
     */
@@ -145,7 +145,7 @@ public class Room
         return (this.listOfItemsInTheRoom);  
     }    
 
-    /** getItemsString method
+    /** 
     * Return a String listing the items in the room.,
     * For example, if the room has items like mask and gloves, this method 
     * should return a String containing: "mask gloves"
@@ -171,7 +171,7 @@ public class Room
         return returnString;  
     }    
 
-    /** addCompulsoryItemsWithThePlayer method 
+    /** 
     * To add a new Compulsory PPE to be used when gettin in this room
     * @param description A compulsory Personal Protective Equipment to be used when gettin in this room
     */
@@ -184,7 +184,7 @@ public class Room
         }
     }
 
-    /** getListOfCompulsoryItemsWithThePlayer method 
+    /** 
     * Return a list of Compulsory Personal Protective Equipment to access the room.
     * @return A list of Compulsory Personal Protective Equipment necessary to access this room safely. */
     public ArrayList<Item> getListOfCompulsoryItemsWithThePlayer()
@@ -192,7 +192,7 @@ public class Room
         return(listOfCompulsoryItemsWithThePlayer);
     }
     
-    /* getStringOfCompulsoryItemsWithThePlayer method
+    /* 
     * Return a String listing the items compusory the get in the room.
     * For example, if the room obligates the play to take mask 
     * and gloves, this method should return a String containing: 
@@ -216,7 +216,7 @@ public class Room
         return returnString;  
     }      
 
-    /* evaluateIfPlayerCanGetInTheRoom method
+    /* 
     * Return a TRUE if the player can get in the room.
     * For example, if the room obligates the play to take mask 
     * and gloves, this method checks if the player has taken mask 
@@ -237,7 +237,7 @@ public class Room
         return true;  
     }     
 
-    /** evaluateItemInTheRoom method
+    /** 
     * Evaluate if the item is in the room.
     * @param nameOfitemToCheck A String name of item to be checked if it is in the room
     * @return The object Item if its is in the room. Null if the item is not in the room.
@@ -254,7 +254,7 @@ public class Room
         return (null);
     }
 
-    /** isInsideOfTheBuilding method
+    /** 
      * @return True if the room is inside of the building.
      */
     public boolean isInsideOfTheBuilding()
@@ -262,7 +262,7 @@ public class Room
         return this.inside;
     }
 
-    /** setInside method
+    /** 
      * Setting if the room is inside of the building or not.
      * @param description True if the room is inside, otherwise false.
      */

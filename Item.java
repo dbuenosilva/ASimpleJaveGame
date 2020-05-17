@@ -23,7 +23,7 @@ public class Item
     private ArrayList<Item> listOfItemsInsideThis;
     private ArrayList<Item> listOfItemsNeededtoOpenThis;    
 
-    /** Item Constructor
+    /** 
      * Constructor for objects of class Item which defines 
      * its name and descritipion.
      * By defaul, all item can be carried by the player
@@ -39,7 +39,7 @@ public class Item
         listOfItemsNeededtoOpenThis = new ArrayList<Item>();       
     }
 
-    /** getDescription method 
+    /** 
     * Return a String description of the item,
     * @return A description of the item. 
     */
@@ -48,7 +48,7 @@ public class Item
         return(this.description);
     }
 
-    /** setDescription method 
+    /** 
     * To set a new description to the item
     * @param description The description to be set.
     */
@@ -57,7 +57,7 @@ public class Item
         this.description = description;
     }
     
-    /** getName method 
+    /** 
     * Return the name  of the item
     * @return The name of the item. */
 
@@ -66,7 +66,7 @@ public class Item
         return(this.name);
     }
 
-    /** setName method 
+    /** 
     * To define the name of the item.
     * @param name The name of the item
     */
@@ -75,7 +75,7 @@ public class Item
         this.name = name;
     }
 
-    /** setitCanBeCarried method 
+    /** 
     * To set a if the item can be carried by the player or not
     * @param itCanBeCarried True if the item can be carried by the player, otherwise FALSE.
     */
@@ -84,7 +84,7 @@ public class Item
         this.itCanBeCarried = itCanBeCarried;
     }
     
-    /** itCanBeCarried method 
+    /** 
     * Return if the item can be carried by the player or not
     * @return True if the item can be carried by the player, otherwise FALSE. 
     */
@@ -93,7 +93,7 @@ public class Item
         return(this.itCanBeCarried);
     }   
     
-    /** addItemInsideAnother method 
+    /** 
     * To add a new item inside of another item.
     * @param newItem A item to be add inside of another item.
     * @return TRUE if the item was added. FALSE if the item was not added.    
@@ -103,7 +103,7 @@ public class Item
         return(this.listOfItemsInsideThis.add(newItem));            
     }
 
-    /** removeItemFromAnotherItem method 
+    /** 
     * Remove a item from the another item.
     * @param newItem A item to be removed from another item.
     * @return TRUE if the item was removed. FALSE if the item was not removed.
@@ -113,7 +113,7 @@ public class Item
         return(this.listOfItemsInsideThis.remove(newItem));
     }
 
-    /** getItemsInsideAnotherItem method
+    /** 
     * Return a list of items inside of another item.
     * @return A list of the available items inside this item. 
     */
@@ -122,7 +122,7 @@ public class Item
         return (this.listOfItemsInsideThis);  
     }    
 
-    /** getItemsInsideString method
+    /** 
     * Return a String listing the items inside another item.,
     * For example, if the item has items like mask and vaccine, this method 
     * should return a String containing: "vaccine"
@@ -148,7 +148,7 @@ public class Item
         return returnString;  
     }      
 
-    /** getItemNeededToOpenThis method
+    /** 
     * Return the item that is needed to open this item
     * if the name searched does not exist, will return null
     * @return The list of needed item to open the item.
@@ -158,7 +158,7 @@ public class Item
         return (this.listOfItemsNeededtoOpenThis);  
     } 
 
-    /** addItemNeededToOpenThis method
+    /** 
     * Adding a necessary item to open this.
     * @param item The needed item. 
     */
@@ -167,7 +167,7 @@ public class Item
         listOfItemsNeededtoOpenThis.add(item); 
     }
     
-    /** getNeededItemsString method
+    /** 
     * Return a String listing the needed items to open this,
     * For example, if the item is a safe that need items like key and password, this method 
     * should return a String containing: "key password"

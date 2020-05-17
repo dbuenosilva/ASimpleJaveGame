@@ -1,63 +1,71 @@
 /**
- * This class is part of the "World of Zuul" application. 
- * "World of Zuul" is a very simple, text based adventure game.  
+ * This class is part of the the "Salving the World from COVID-19" application.
+ * "Salving the World from COVID-19" is a educative, text based adventure game.
  * 
- * This class holds an enumeration of all command words known to the game.
- * It is used to recognise commands as they are typed in.
+ * This class holds an enumeration of all command words known to the game. It is
+ * used to recognise commands as they are typed in.
  *
- * @author  Michael Kölling and David J. Barnes
- * @author  Diego Bueno da Silva
+ * @author Michael Kölling and David J. Barnes
+ * @author Diego Bueno da Silva
  * @version 2020.05.04
  */
 
+import java.util.HashMap;
+
 public class CommandWords
 {
-    // a constant array that holds all valid command words
-    private static final String[] validCommands = {
-        "drop","go","help","inventory","look","map","open","quit","take"
-    };
+    // A mapping between a command word and the CommandWord
+    // associated with it.
+    private HashMap<String, CommandWord> validCommands;
 
-    /** CommandWords constructor
-     * Constructor - initialise the command words.
+    /** 
+     * Constructor initialises the command words.
      */
     public CommandWords()
     {
-        // nothing to do at the moment...
+        validCommands = new HashMap<>();
+        for(CommandWord command : CommandWord.values()) {
+            if(command != CommandWord.UNKNOWN) {
+                validCommands.put(command.toString(), command);
+            }
+        }
     }
 
-    /** isCommand method
+    /** 
+     * Find the CommandWord associated with a command word.
+     * @param commandWord The word to look up.
+     * @return The CommandWord correspondng to commandWord, or UNKNOWN
+     *         if it is not a valid command word.
+     */
+    public CommandWord getCommandWord(String commandWord)
+    {
+        CommandWord command = validCommands.get(commandWord);
+        if(command != null) {
+            return command;
+        }
+        else {
+            return CommandWord.UNKNOWN;
+        }
+    }
+    
+    /** 
      * Check whether a given String is a valid command word. 
-     * @return true if a given string is a valid command,
-     * false if it isn't.
+     * @return true if it is, false if it isn't.
      */
     public boolean isCommand(String aString)
     {
-        for(int i = 0; i < validCommands.length; i++) {
-            if(validCommands[i].equals(aString))
-                return true;
-        }
-        // if we get here, the string was not found in the commands
-        return (false);
+        return validCommands.containsKey(aString);
     }
 
-    /** getCommandsString method
-    * Return a string with all valid commands in order to orient the player 
-    * @return A description of the available commands. 
-    */
-   public String getCommandsString()
-   {
-       String returnString = "";
-
-       for(String command : validCommands) { 
-            returnString += "> " + command + "\n";
-       }
-       if(returnString.isEmpty()) {
-           returnString = "There is not commands available";
-       }
-       else {
-           returnString = "The commands that you can use are: \n\n"  + returnString ; 
-       }
-
-       return returnString;   
+    /** 
+     * Print all valid commands to System.out.
+     */
+    public String showAll() 
+    {
+        String commandsString = "Valid commands: ";
+        for(String command : validCommands.keySet()) {
+            commandsString += command + "  ";
+        }
+        return(commandsString);
     }
 }

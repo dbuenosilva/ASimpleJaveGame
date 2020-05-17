@@ -15,34 +15,32 @@
  * @version 2020.05.04
  */
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 
 public class Game 
 {
-    final static boolean INSIDE = true;
-    final static boolean OUTSIDE = false;
-    private final Parser parser;
-    private Room currentRoom;
-    private Player player01;
+    final static boolean INSIDE = true; // constant to set room as inside of the building
+    final static boolean OUTSIDE = false; // constant to set room as outside of the building
+    private final Parser parser; // parse of the game
+    private Player player01; // the player
     private Item mask, safePassword, gloves, protectionGlasses, safeKey, 
     handSanitiser, guineaPigs, covid19VaccineFormula, covid19Vaccine, safe;
 
-        
-    /** Game constructor
-     * Create the game and initialise its internal map,
+    /**  
+     * Constructor creates the game and initialise its internal map,
      * rooms and its items.
      */
     public Game() 
     {
+        createPlayers();
         createItems();
-        createRooms();
+        createRooms();      
         parser = new Parser();
     }
 
-    /** createItems method
+    /** 
      * Create all the items that the player perhaps take to save the World.
      * This method does not have parametres and return.
      */
@@ -69,7 +67,16 @@ public class Game
 
     }
 
-    /** createRooms method
+    /** 
+     * Create the players who perhaps saves the World.
+     * This method does not have parametres and return.
+     */
+    private void createPlayers() 
+    {
+        player01 = new Player(JOptionPane.showInputDialog("Please enter the name of the player 01"));
+    }
+
+    /** 
      * Create all the rooms, link their exits together and assign to their its items
      * This method does not have parametres and return.
      */
@@ -165,15 +172,20 @@ public class Game
         downstairsLaboratory.addCompulsoryItemsWithThePlayer(gloves);
         downstairsLaboratory.addCompulsoryItemsWithThePlayer(protectionGlasses);
 
-        currentRoom = outside;  // starting the game outside
+        player01.setCurrentRoom(outside);  // starting the game outside
     }
 
-    /** play method
-     *  Main play routine.  Loops until end of play.
+    /** 
+     *  Start the game. Loops until end of play.
      */
     public void play() 
     {            
-        player01 = new Player(JOptionPane.showInputDialog("Please enter the name of the player 01"));
+        // If the player got Game Over, give him/her a new opportunity to play
+        if( player01 == null ) {
+            createPlayers();
+            createItems();
+            createRooms(); 
+         }
 
         printWelcome();
 
@@ -188,15 +200,12 @@ public class Game
         System.out.println("Thank you for playing. Be safety!");
 
         // Reset objects in case the player wants to try again
-        currentRoom = null;
         player01 = null;
         mask = safePassword = gloves = protectionGlasses = safeKey =
-        handSanitiser = guineaPigs = covid19VaccineFormula =  covid19Vaccine = safe = null;
-        createItems();
-        createRooms();     
+        handSanitiser = guineaPigs = covid19VaccineFormula =  covid19Vaccine = safe = null;    
     }
 
-    /** printWelcome method
+    /** 
      * Print out the opening message for the player.
      */
     private void printWelcome()
@@ -217,12 +226,12 @@ public class Game
         System.out.println("before leaving the building. If you collects the COVID-19 vaccine and also the COVID-19 "); 
         System.out.println("vaccine formula, you will get an award despite win the game!");
         System.out.println();
-        System.out.println("Type \"help\" if you need help with commands and \"map\" the see the initial map.");
+        System.out.println("Type \"help\" if you need help with commands and \"map\" to see the initial map.");
         System.out.println();
-        System.out.println(currentRoom.getLongDescription());     
+        System.out.println(player01.getCurrentRoom().getLongDescription());     
     }
 
-    /** processCommand method
+    /** 
      * Given a command, process (that is: execute) the command.
      * @param command The command to be processed.
      * @return true If the command ends the game, false otherwise.
@@ -230,47 +239,54 @@ public class Game
     private boolean processCommand(final Command command) 
     {
         boolean wantToQuit = false;
+        CommandWord commandWord = command.getCommandWord();
 
-        if(command.isUnknown()) {
-            System.out.println("Invalid command  :( \n Try \"help\" to see a set of valid commands");
-            return false;
+        switch (commandWord) {
+            case UNKNOWN: {
+                System.out.println("Command invalid! Please try \"help\" to check available commands.");
+                break;
+            }
+            case HELP: {
+                printHelp();
+                break;
+            }
+            case GO: {
+                wantToQuit = goRoom(command);
+                break;
+            }
+            case LOOK: {
+                player01.look();
+                break;
+            }
+            case TAKE: {
+                player01.take(command);
+                break;
+            }
+            case DROP: {
+                player01.drop(command);
+                break;
+            }
+            case INVENTORY: {
+                player01.inventory();
+                break;
+            }
+            case OPEN: {
+                player01.open(command);
+                break;
+            }
+            case MAP: {
+                map();
+                break;
+            }          
+            case QUIT: {
+                wantToQuit = quit(command); 
+                break;                                                  
+            }
         }
-
-        final String commandWord = command.getCommandWord();
-        if (commandWord.equals("help")) {
-            printHelp();
-        }
-        else if (commandWord.equals("go")) {
-            wantToQuit = goRoom(command);
-        }
-        else if (commandWord.equals("quit")) {
-            wantToQuit = quit(command);
-        }
-        else if (commandWord.equals("look")) {
-            look();
-        }
-        else if (commandWord.equals("take")) {
-            take(command);
-        }
-        else if (commandWord.equals("drop")) {
-            drop(command);
-        }        
-        else if (commandWord.equals("inventory")) {
-            inventory();
-        }  
-        else if (commandWord.equals("open")) {
-            open(command);
-        }  
-        else if (commandWord.equals("map")) {
-            map();
-        }  
-
         return wantToQuit;
     }
 
-    /*************** implementations of user commands ****************/
-
-    /** printHelp method
+    /** 
      * Print out some help information.
      * Here we print some stupid, cryptic message and a list of the 
      * command words.
@@ -279,10 +295,10 @@ public class Game
     {
         System.out.println("Come on " + player01.getName() + "! Are you at least wearing Personal Protective Equipment?\n");
         System.out.println("Pay attention to where you are going! You can die from COVID-19...");
-        System.out.println(parser.showCommands());
+        System.out.println(parser.getCommandsString());
     }
 
-    /** goRoom method
+    /** 
      * Try to go in one direction. If there is an exit, enter
      * the new room, otherwise print an error message.
      * Return false in case the player gets gave over or win the game
@@ -300,26 +316,25 @@ public class Game
         final String direction = command.getSecondWord();
 
         // Trying to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = player01.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("Sorry " + player01.getName());
-            System.out.println("There is no door in the direction " + direction + " " +  currentRoom.getDescription());
+            System.out.println("There is no door in the direction " + direction + " " +  player01.getCurrentRoom().getDescription());
         }
         else {           
-                currentRoom = nextRoom;
-                // Evaluate if the player could get in the room
-                if (nextRoom.evaluateIfPlayerCanGetInTheRoom(player01) && currentRoom.isInsideOfTheBuilding() ) {
-                    System.out.println(currentRoom.getLongDescription());
-                }
-                else {
-                    resultOftheGame();                    
-                    return( true );
-                }
+            player01.setCurrentRoom(nextRoom);
+            // Evaluate if the player could get in the room
+            if (nextRoom.evaluateIfPlayerCanGetInTheRoom(player01) && player01.getCurrentRoom().isInsideOfTheBuilding() ) {
+                System.out.println(player01.getCurrentRoom().getLongDescription());
+            }
+            else {
+                resultOftheGame();                    
+                return( true );
+            }
         }   
     return( false );         
     }
-
 
     /** 
      * "Quit" was entered. Check the rest of the command to see
@@ -337,200 +352,7 @@ public class Game
         }
     }
 
-    /** look method
-     * Display where the play is and what items are in the room
-     * After a sequence of commands the player may become lost,
-     * "look" command will help the player remember where he is.
-     */
-    private void look()
-    {
-        System.out.println(currentRoom.getLongDescription()); 
-    }
-
-    /** take method
-     * Pick up a item available in the room.
-     * The player can carry this item thought the building if
-     * it is a good item. Some items may kill the player in case
-     * he/she does not use PPE.
-     */
-    private void take(final Command command) 
-    {
-        if(!command.hasSecondWord()) {
-            // if there is no second word, we don't know where to go...
-            System.out.println("Take what?");
-            return;
-        }
-
-        final String nameOfItem = command.getSecondWord();        
-        Iterator<Item> itemsInTheRoom = currentRoom.getItemsInTheRoom().iterator();
-
-        while(itemsInTheRoom.hasNext()){   
-            
-            Item itemToBeCollected;
-            itemToBeCollected = itemsInTheRoom.next();
-
-            if(itemToBeCollected.getName().equals(nameOfItem)) {
-
-                // transfering the item from the room to the player
-                if (currentRoom.removeItemFromTheRoom(itemToBeCollected)) {  
-
-                    if(player01.addItemToThePlayer(itemToBeCollected)) {
-                        System.out.println("Well done " + player01.getName() + "!");                        
-                        System.out.println("Item " + itemToBeCollected.getName() + " collected.");
-                        return; // stop the loop, item found and added successful!  
-                    }
-                    else {// somethis went wrong to add the item to player
-                        System.out.println("Error to try to take the item \"" + itemToBeCollected.getName() + "\" from the room.");    
-                        System.out.println("Hint: Check if the item \"" + itemToBeCollected.getName() + "\" can be carried or maybe openned.");                                          
-                        currentRoom.addItemInTheRoom(itemToBeCollected); // Roolback previous operation due some error                        
-                        return;// stop the loop, item found but there is some inconsistent 
-                    }
-                }
-                else { // somethis went wrong to room give the item to player
-                    System.out.print("Error to try to take the item \"" + itemToBeCollected.getName() + "\" from the room.");                    
-                    return;// stop the loop, item found but there is some inconsistent                    
-                }                
-            }
-
-            // If it reach this point, the item asked is not in the room
-            System.out.println("Unfortunately, the item \"" + nameOfItem + "\" is not in the room :(");
-            System.out.println(currentRoom.getItemsString());                        
-        }
-      
-    }
-
-    /** drop method
-     * Drop a item available in the room.
-     * The player can drop an item in the room in case
-     * the room is not full.
-     */
-    private void drop(final Command command) 
-    {
-        if(!command.hasSecondWord()) {
-            // if there is no second word, we don't know where to go...
-            System.out.println("Drop what?");
-            return;
-        }
-
-        final String nameOfItem = command.getSecondWord();
-        Iterator<Item> items = player01.getItemsWithThePlayer().iterator();
-
-        while(items.hasNext()){   
-            Item itemToBeDropped = items.next();
-            if(itemToBeDropped.getName().equals(nameOfItem)) {
-
-                // transfering the item from the player to the room
-                if(currentRoom.addItemInTheRoom(itemToBeDropped)) { // if the room accepts this item
-                    if(player01.removeItemFromThePlayer(itemToBeDropped)) {  // and if player can drop the item
-                        System.out.print("Item " + itemToBeDropped.getName() + " dropped " );
-                        System.out.println(currentRoom.getDescription());
-                        return;  // stop the loop, item found and dropped!                               
-                    }
-                    else { // somethis went wrong to player drop the item
-                        System.out.print("Error to try to drop the item " + itemToBeDropped.getName() + " in the room " );
-                        currentRoom.removeItemFromTheRoom(itemToBeDropped); // rollback previous instruction
-                        return;// stop the loop, item found but there is some inconsistent
-                    }
-                }
-                else { // The room maybe is full
-                    System.out.println("Error to try to drop the item " + itemToBeDropped.getName() + " in the room,");
-                    System.out.println("Try \"look\" command and check if " + currentRoom.getDescription() + " is full,");                    
-                    System.out.println("or \"inventory\" command and check if you really have the item " + itemToBeDropped.getDescription());
-                    return;// stop the loop, item found but there is some inconsistent
-                }                           
-            }
-        }
-        // The item asked is not with the player
-        System.out.println("Sorry " + player01.getName() + ", you do not have the item " + nameOfItem + " :(");
-        System.out.println("Try \"inventory\" command and check what items do you have with you.");
-    }   
-
-    /** open method
-     * Open a item available in the room.
-     * The player can open an item in the room in case
-     * the item has some objects inside its.
-     */
-    private void open(final Command command) 
-    {
-        if(!command.hasSecondWord()) {
-            // if there is no second word, we don't know where to go...
-            System.out.println("Open what?");
-            return;
-        }
-
-        final String nameOfItemToOpen = command.getSecondWord();
-
-        // Checking if the item to be open is in the room
-        Item itemToBeOpenned = currentRoom.evaluateItemInTheRoom(nameOfItemToOpen);
-
-        if( itemToBeOpenned != null) { 
-
-            // Item is in the room, then getting all the necessary items to open it.
-            Iterator<Item> items = itemToBeOpenned.getItemNeededToOpenThis().iterator();
-            while(items.hasNext()){   
-                Item currentItem = items.next();
-
-                // If the player do not have one of necessary item
-                if ( player01.evaluateItemWithThePlayer(currentItem.getName()) == null ) {
-                    System.out.println("Sorry " + player01.getName() + ", you do not have the item \"" + currentItem.getName() + "\" to open the " + itemToBeOpenned.getName() + " :(");                  
-                    System.out.println("You need to take the items: " + itemToBeOpenned.getNeededItemsString() + " to open the \"" + itemToBeOpenned.getName() + "\" "); 
-                    System.out.println("Hint: use the command \"inventory\" to check which of them you have already collected.");               
-                    return;
-                }
-            }
-
-            // If the program reaches this point, the player has all the necessary items to open it.
-            // Let's check what are inside of it!
-            Iterator<Item> itemsInsideOfItemOpenned = itemToBeOpenned.getItemsInsideAnotherItem().iterator();            
-
-            // auxiliary array to save items inside the safe
-            ArrayList<Item> itemsCauthtByThePlayer = new ArrayList<Item>(); 
-
-            // Checking if this item is empty
-            if ( ! itemsInsideOfItemOpenned.hasNext() ) { 
-                System.out.println("There is nothing inside of " + itemToBeOpenned.getName() + " :("); 
-            }
-            else { // Saving the list of item inside it to remove soon and to give to the player
-                while(itemsInsideOfItemOpenned.hasNext()) {                    
-                    itemsCauthtByThePlayer.add(itemsInsideOfItemOpenned.next());  
-                }
-            }
-
-            // Moving the itens inside it to the player
-            Iterator<Item> itemsToMove = itemsCauthtByThePlayer.iterator();            
-            while(itemsToMove.hasNext()) {
-                Item itemToMove = itemsToMove.next();
-                if(player01.addItemToThePlayer(itemToMove)) {  // give to player                
-                    if (itemToBeOpenned.removeItemFromAnotherItem(itemToMove) ) { // removing from it
-                        System.out.println("Congrats " + player01.getName() + "!!!");                        
-                        System.out.println("\"" + itemToBeOpenned.getName() + "\" openned and item " + itemToMove.getName() + " collected successfully!"); 
-                        System.out.println("Hint: type \"inventory\" and check if you have all required items to win the game!" );                                          
-                    } 
-                    else { // in case something goes wrong, rollback the one part on operation
-                        System.out.println("Sorry " + player01.getName() + ", the item \"" + itemToMove.getName() + "\" could not be collected from " + itemToBeOpenned.getDescription() + " :(");
-                        player01.removeItemFromThePlayer(itemToMove); // rollback previous operation                       
-                    }
-                }
-                else { // For some reason, this item can not be moved...
-                    System.out.println("Sorry " + player01.getName() + ", the item \"" + itemToMove.getName() + "\" could not be collect :(");
-                    System.out.println("Hint: check if the item " + itemToBeOpenned.getDescription() + " can be carried or maybe openned.");                  
-                }
-            }
-        }      
-        else { // Item that was required to be openned is not in the room
-            System.out.println("Sorry " + player01.getName() + ", there is not item \"" + nameOfItemToOpen + "\" " + currentRoom.getDescription() + " :(");
-        }        
-    }  
-
-    /** inventory method
-     * Print out all items owned by the player.
-     */
-    private void inventory() 
-    {
-        System.out.println(player01.getStringItemsWithThePlayer());     
-    }
-
-    /** map method
+    /** 
      * Show a image of the initial map to the player.
      */
     private void map() 
@@ -540,14 +362,14 @@ public class Game
                                             JOptionPane.INFORMATION_MESSAGE, map);   
     }
 
-    /** resultOftheGame method
+    /** 
      * The resultOftheGame method ends the game and shows the result
      * to the play. In case he/she get out of building with the 
      * vaccine and handsanitiser he/she won the game, otherwise gameover!
      */
     private void resultOftheGame() {
 
-        Iterator<Item> itemsThePlayerShouldHave = currentRoom.getListOfCompulsoryItemsWithThePlayer().iterator();
+        Iterator<Item> itemsThePlayerShouldHave = player01.getCurrentRoom().getListOfCompulsoryItemsWithThePlayer().iterator();
 
         while( itemsThePlayerShouldHave.hasNext()) {
 
@@ -557,7 +379,7 @@ public class Game
             if( player01.getItemWithThePlayer( itemInAnalyse.getName() ) != null ) {
                 
                 // Checking if the player left the building and win the game
-                if ( ! currentRoom.isInsideOfTheBuilding() ) {
+                if ( ! player01.getCurrentRoom().isInsideOfTheBuilding() ) {
 
                     // Checking if he/she colleted the vaccine
                     if ( player01.evaluateItemWithThePlayer("vaccine") != null ) {
@@ -595,11 +417,10 @@ public class Game
             else { // the player does not have all the items 
                 System.out.println("GAME OVER " + player01.getName() + "!");
                 System.out.println();
-                System.out.println("You must never get " + currentRoom.getDescription() + " without take: ");
-                System.out.println( currentRoom.getStringOfCompulsoryItemsWithThePlayer() );
+                System.out.println("You must never get " + player01.getCurrentRoom().getDescription() + " without take: ");
+                System.out.println( player01.getCurrentRoom().getStringOfCompulsoryItemsWithThePlayer() );
                 return;
             }
         }
     }
-    /*************** end of implementations of user commands **************/    
 }

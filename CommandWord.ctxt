@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=CommandWord
+comment0.text=\n\ Representations\ for\ all\ the\ valid\ command\ words\ for\n\ the\ "Salving\ the\ World\ from\ COVID-19"\ application.\n\ @author\ \ Diego\ Bueno\ da\ Silva\n\ @version\ 2020.05.04\n
+comment1.params=commandString
+comment1.target=CommandWord(java.lang.String)
+comment1.text=\ \n\ Initialize\ with\ the\ corresponding\ command\ string.\ \n\ @param\ commandString\ The\ command\ string.\n
+comment2.params=
+comment2.target=java.lang.String\ toString()
+comment2.text=\ \n\ @return\ The\ command\ word\ as\ a\ string.\ \n
+numComments=3

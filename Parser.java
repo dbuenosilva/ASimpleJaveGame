@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 /**
  * This class is part of the "World of Zuul" application. 
  * "World of Zuul" is a very simple, text based adventure game.  
@@ -17,6 +15,9 @@ import java.util.Scanner;
  * @author  Diego Bueno da Silva
  * @version 2020.05.04
  */
+
+import java.util.Scanner;
+
 public class Parser 
 {
     private CommandWords commands;  // holds all valid command words
@@ -31,7 +32,7 @@ public class Parser
         reader = new Scanner(System.in);
     }
 
-    /** getCommand method
+    /** 
      * @return The next command from the user.
      */
     public Command getCommand() 
@@ -54,22 +55,15 @@ public class Parser
             }
         }
 
-        // Now check whether this word is known. If so, create a command
-        // with it. If not, create a "null" command (for unknown command).
-        if(commands.isCommand(word1)) {
-            return new Command(word1, word2);
-        }
-        else {
-            return new Command(null, word2); 
-        }
+        return new Command(commands.getCommandWord(word1), word2);
     }
 
-    /** showCommands method
-    * Return a string with all valid commands in order to orient the player 
-    * @return A description of the available commands. 
-    */
-    public String showCommands()
+    /** 
+     * Print out a list of valid command words.
+     * @return a string with all value commands
+     */
+    public String getCommandsString()
     {
-        return(commands.getCommandsString());
-    }    
+        return(commands.showAll());
+    }
 }
